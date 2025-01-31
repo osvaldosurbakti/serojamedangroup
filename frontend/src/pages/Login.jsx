@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Untuk navigasi setelah login
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext"; // Import AuthContext
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate(); // Hook untuk navigasi
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Gunakan login dari context
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,17 +23,17 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Simpan token dan role di localStorage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role);
-
+        // Simpan data ke context dan localStorage
+        login(data.token, data.role);
         alert("Login berhasil!");
 
-        // Arahkan berdasarkan peran pengguna
+        // Arahkan pengguna berdasarkan peran
         if (data.role === "admin") {
           navigate("/admindashboard");
         } else if (data.role === "superadmin") {
           navigate("/superadmindashboard");
+        } else {
+          navigate("/");
         }
       } else {
         setErrorMessage(data.message || "Login gagal!");
@@ -46,18 +48,14 @@ const Login = () => {
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Login</h1>
         <nav>
-          <a href="/" className="text-blue-600 hover:underline">
-            Home
-          </a>
+          <a href="/" className="text-blue-600 hover:underline">Home</a>
         </nav>
       </header>
 
       <main className="bg-white p-8 rounded-lg shadow-md w-96">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block font-medium text-gray-700">
-              Username:
-            </label>
+            <label htmlFor="username" className="block font-medium text-gray-700">Username:</label>
             <input
               type="text"
               id="username"
@@ -69,9 +67,7 @@ const Login = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block font-medium text-gray-700">
-              Password:
-            </label>
+            <label htmlFor="password" className="block font-medium text-gray-700">Password:</label>
             <input
               type="password"
               id="password"

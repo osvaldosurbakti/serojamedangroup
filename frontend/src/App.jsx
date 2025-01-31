@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from '../src/pages/Home';
-import AboutUs from '../src/pages/AboutUs';
-import Business from '../src/pages/Business';
-import ContactUs from '../src/pages/ContactUs';
-import Footer from '../src/components/Footer';
-import Navbar from '../src/components/Navbar';
-import Header from '../src/components/Header';
-import Login from '../src/pages/Login';
-import SuperAdminDashboard from '../src/pages/SuperAdminDashboard';
-import Index from '../src/pages/Index';
-import AdminDashboard from '../src/pages/AdminDashboard';
-import ControlAdmin from '../src/pages/ControlAdmin';
-import History from '../src/pages/History';
-import NewsEvents from '../src/pages/NewsEvents';
+import { AuthProvider } from './context/AuthContext';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import AboutUs from './pages/AboutUs';
+import Business from './pages/Business';
+import NewsEvents from './pages/NewsEvents';
+import ContactUs from './pages/ContactUs';
+import Login from './pages/Login';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
+import AdminDashboard from './pages/AdminDashboard';
+import ControlAdmin from './pages/ControlAdmin';
+import History from './pages/History';
+
 
 function App() {
   const [data, setData] = useState('');
@@ -32,34 +33,34 @@ function App() {
         setLoading(false);
       });
   }, []);
-  
+
   return (
     <Router>
-      <Navbar />
-      <Header />
+      <AuthProvider>
+        <Navbar />
+        <Header />
 
-      <main className="flex-grow p-4 bg-gray-100">
-        {loading && <div>Loading...</div>}
-        {error && <div>{error}</div>}
+        <main className="flex-grow p-4 bg-gray-100">
+          {loading && <div>Loading...</div>}
+          {error && <div>{error}</div>}
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/business" element={<Business />} />
-          <Route path="/newsevents" element={<NewsEvents />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/superadmindashboard" element={<SuperAdminDashboard />} />
-          <Route path="/index" element={<Index />} />
-          <Route path="/admindashboard" element={<AdminDashboard />} />
-          <Route path="/controladmin" element={<ControlAdmin />} />
-          <Route path="/history" element={<History />} />
-          {/* Catch-all 404 route */}
-          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
-        </Routes>
-      </main>
-      
-      <Footer />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/business" element={<Business />} />
+            <Route path="/newsevents" element={<NewsEvents />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/superadmindashboard" element={<SuperAdminDashboard />} />
+            <Route path="/admindashboard" element={<AdminDashboard />} />
+            <Route path="/controladmin" element={<ControlAdmin />} />
+            <Route path="/history" element={<History />} />
+            <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+          </Routes>
+        </main>
+
+        <Footer />
+      </AuthProvider>
     </Router>
   );
 }

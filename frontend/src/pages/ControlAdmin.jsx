@@ -73,7 +73,7 @@ const ControlAdmin = () => {
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Control Admin</h1>
         <nav>
-          <a href="superadmin.html" className="mr-4 text-blue-500">Superadmin Dashboard</a>
+          <a href="superadmin" className="mr-4 text-blue-500">Superadmin Dashboard</a>
           <button className="text-red-500" onClick={() => console.log("Logout")}>Logout</button>
         </nav>
       </header>
