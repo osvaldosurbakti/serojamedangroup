@@ -39,6 +39,13 @@ function Footer() {
                   </Link>
               </li>
               <li>
+              <Link to="/newsevents"
+                  className="text-gray-300 hover:text-yellow-500 transition-colors duration-300"
+                >
+                  News & Events
+                  </Link>
+              </li>
+              <li>
               <Link to="/contact-us"
                   className="text-gray-300 hover:text-yellow-500 transition-colors duration-300"
                 >

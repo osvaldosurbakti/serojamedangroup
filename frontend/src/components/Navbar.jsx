@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Cek apakah user sudah login berdasarkan localStorage atau sesi lainnya
+    const user = localStorage.getItem('user');
+    setIsAuthenticated(!!user);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Hapus status login
+    setIsAuthenticated(false);
+    navigate('/login'); // Redirect ke halaman login
+  };
 
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'About Us', path: '/about-us' },
     { label: 'Business', path: '/business' },
+    { label: 'News & Event', path: '/newsevents' }, // Tambahan menu
     { label: 'Contact Us', path: '/contact-us' },
   ];
 
@@ -34,12 +49,21 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Login Button */}
-          <Link to="/login">
-            <button className="px-6 py-2 bg-yellow-500 text-gray-900 font-bold rounded-md hover:bg-yellow-600 transition-all duration-300">
-              Login
+          {/* Login / Logout Button */}
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="px-6 py-2 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 transition-all duration-300"
+            >
+              Logout
             </button>
-          </Link>
+          ) : (
+            <Link to="/login">
+              <button className="px-6 py-2 bg-yellow-500 text-gray-900 font-bold rounded-md hover:bg-yellow-600 transition-all duration-300">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -61,22 +85,34 @@ const Navbar = () => {
               <Link
                 to={item.path}
                 className="block text-white px-6 py-3 border-b-2 border-yellow-400 hover:bg-yellow-400 hover:text-gray-800 rounded-md transition-all duration-300 ease-in-out"
-                onClick={() => setIsOpen(false)} // Close the menu after clicking
+                onClick={() => setIsOpen(false)}
               >
                 {item.label}
               </Link>
             </li>
           ))}
-          {/* Login Button in Mobile Menu */}
+          {/* Login / Logout Button in Mobile Menu */}
           <li>
-            <Link to="/login">
+            {isAuthenticated ? (
               <button
-                className="w-full px-6 py-2 bg-yellow-500 text-gray-900 font-bold rounded-md hover:bg-yellow-600 transition-all duration-300"
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="w-full px-6 py-2 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 transition-all duration-300"
               >
-                Login
+                Logout
               </button>
-            </Link>
+            ) : (
+              <Link to="/login">
+                <button
+                  className="w-full px-6 py-2 bg-yellow-500 text-gray-900 font-bold rounded-md hover:bg-yellow-600 transition-all duration-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login
+                </button>
+              </Link>
+            )}
           </li>
         </ul>
       </div>
