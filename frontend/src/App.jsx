@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';  // Import useAuth hook
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
+import SuperadminNavbar from './components/SuperadminNavbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
@@ -15,7 +16,6 @@ import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ControlAdmin from './pages/ControlAdmin';
 import History from './pages/History';
-
 
 function App() {
   const [data, setData] = useState('');
@@ -34,10 +34,19 @@ function App() {
       });
   }, []);
 
+  // Access authentication context to determine if user is logged in and their role
+  const { isAuthenticated, role } = useAuth();  // Use the custom hook here
+
   return (
     <Router>
       <AuthProvider>
-        <Navbar />
+        {/* Conditionally render Navbar based on authentication and role */}
+        {isAuthenticated && role === 'superadmin' ? (
+          <SuperadminNavbar />
+        ) : (
+          <Navbar />
+        )}
+
         <Header />
 
         <main className="flex-grow p-4 bg-gray-100">
@@ -51,10 +60,16 @@ function App() {
             <Route path="/newsevents" element={<NewsEvents />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/superadmindashboard" element={<SuperAdminDashboard />} />
-            <Route path="/admindashboard" element={<AdminDashboard />} />
-            <Route path="/controladmin" element={<ControlAdmin />} />
-            <Route path="/history" element={<History />} />
+            {isAuthenticated && role === 'superadmin' && (
+              <>
+                <Route path="/superadmindashboard" element={<SuperAdminDashboard />} />
+                <Route path="/controladmin" element={<ControlAdmin />} />
+                <Route path="/history" element={<History />} />
+              </>
+            )}
+            {isAuthenticated && role === 'admin' && (
+              <Route path="/admindashboard" element={<AdminDashboard />} />
+            )}
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Routes>
         </main>

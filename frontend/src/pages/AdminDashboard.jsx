@@ -82,7 +82,7 @@ const Dashboard = () => {
         <h1 className="text-3xl font-bold">{role === "superadmin" ? "Superadmin Dashboard" : "Admin Dashboard"}</h1>
         <nav className="mt-4">
           <a href="/" className="text-indigo-200 hover:text-white mr-4">Home</a>
-          <a href="/dashboard" className="text-indigo-200 hover:text-white">Dashboard</a>
+          <a href="/admindashboard" className="text-indigo-200 hover:text-white">Dashboard</a>
           <button
             onClick={() => { localStorage.clear(); window.location.href = "/login"; }}
             className="ml-6 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"

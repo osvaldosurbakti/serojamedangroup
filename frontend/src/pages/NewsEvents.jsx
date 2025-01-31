@@ -35,46 +35,29 @@ const NewsEvents = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <header className="text-center mb-4">
-        <h1 className="text-2xl font-bold">Welcome to the News & Events Page</h1>
-        <div className="mt-4">
-          {user ? (
-            <div>
-              {user.role === "admin" && (
-                <a href="/admin" className="text-blue-500 mx-2">Admin Dashboard</a>
-              )}
-              {user.role === "superadmin" && (
-                <a href="/superadmin" className="text-green-500 mx-2">Superadmin Dashboard</a>
-              )}
-              <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded ml-4">Logout</button>
-            </div>
-          ) : (
-            <a href="/login" className="bg-blue-500 text-white px-4 py-2 rounded">Login</a>
-          )}
+    <div className="min-h-screen bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-200 p-6">
+      <header className="text-center mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-800">Welcome to the News & Events Page</h1>
+        <div className="mt-6">
         </div>
       </header>
-
-      <main className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
-        <h3 className="text-xl font-semibold mb-4">Berita & Acara</h3>
-        <ul className="space-y-4">
+  
+      <main className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h3 className="text-2xl font-semibold text-gray-800 mb-6">Berita & Acara</h3>
+        <ul className="space-y-6">
           {newsEvents.length > 0 ? (
             newsEvents.map((newsEvent) => (
-              <li key={newsEvent.id} className="p-4 border rounded">
-                <strong>{newsEvent.title}</strong>
-                <p className="text-sm text-gray-500">Kategori: {newsEvent.category}</p>
-                <p>{newsEvent.description}</p>
+              <li key={newsEvent.id} className="p-6 bg-gray-50 border-2 border-gray-200 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105">
+                <strong className="text-xl font-bold text-gray-900">{newsEvent.title}</strong>
+                <p className="text-sm text-gray-600 mt-2">Kategori: {newsEvent.category}</p>
+                <p className="mt-2 text-gray-700">{newsEvent.description}</p>
                 {newsEvent.eventDate && (
-                  <p className="text-gray-600">Tanggal: {new Date(newsEvent.eventDate).toLocaleDateString()}</p>
+                  <p className="mt-2 text-gray-600">Tanggal: {new Date(newsEvent.eventDate).toLocaleDateString()}</p>
                 )}
                 {newsEvent.image && (
-                  <img src={newsEvent.image} alt="Event" className="w-full h-auto mt-2 rounded" />
+                  <img src={newsEvent.image} alt="Event" className="w-full h-auto mt-4 rounded-lg shadow-sm" />
                 )}
               </li>
             ))
@@ -85,6 +68,7 @@ const NewsEvents = () => {
       </main>
     </div>
   );
+  
 };
 
 export default NewsEvents;

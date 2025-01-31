@@ -1,5 +1,4 @@
-import { createContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useState, useEffect, useContext } from 'react';
 
 export const AuthContext = createContext();
 
@@ -8,8 +7,8 @@ export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userRole = localStorage.getItem("role");
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('role');
 
     if (token) {
       setIsAuthenticated(true);
@@ -18,15 +17,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (token, userRole) => {
-    localStorage.setItem("token", token);
-    localStorage.setItem("role", userRole);
+    localStorage.setItem('token', token);
+    localStorage.setItem('role', userRole);
     setIsAuthenticated(true);
     setRole(userRole);
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
     setIsAuthenticated(false);
     setRole(null);
   };
@@ -36,4 +35,9 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+// Custom hook to use the AuthContext
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

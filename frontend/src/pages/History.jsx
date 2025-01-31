@@ -1,51 +1,90 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 const AdminHistory = () => {
-  const [history, setHistory] = useState([]);
+  const [historyData, setHistoryData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Fetch Riwayat Aksi Admin
+  const fetchHistory = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/history', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setHistoryData(data);
+      setLoading(false);
+
+    } catch (error) {
+      setError('Gagal memuat riwayat. Cek koneksi atau server!');
+      setLoading(false);
+    }
+  };
+
+  // Panggil fetchHistory saat komponen dimuat
   useEffect(() => {
-    // Simulasi pengambilan data riwayat dari API
-    const fetchHistory = async () => {
-      const data = [
-        { id: 1, action: "Menambahkan user baru", timestamp: "2025-01-29 10:00" },
-        { id: 2, action: "Menghapus data pelanggan", timestamp: "2025-01-28 14:30" },
-      ];
-      setHistory(data);
-    };
-    
     fetchHistory();
   }, []);
 
+  // Fungsi logout
   const handleLogout = () => {
-    // Tambahkan logika logout di sini
-    console.log("Logout berhasil");
+    localStorage.removeItem('token');
+    window.location.href = '/login'; // Redirect ke halaman login setelah logout
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <header className="bg-blue-600 text-white p-4 flex justify-between items-center rounded-lg">
-        <h1 className="text-xl font-bold">Riwayat Aksi Admin</h1>
-        <nav>
-          <a href="/superadmindashboard" className="mr-4 hover:underline">Kembali ke Dashboard</a>
-          <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded hover:bg-red-600">
+    <div className="container mx-auto p-4">
+      <header className="text-center mb-6">
+        <h1 className="text-3xl font-bold">Riwayat Aksi Admin</h1>
+        <nav className="mt-4">
+          <a href="/superadmindashboard" className="text-blue-500 mx-4 hover:underline">Kembali ke Dashboard</a>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300"
+          >
             Logout
           </button>
         </nav>
       </header>
 
-      <main className="mt-6 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold mb-4">Riwayat Admin</h2>
-        <ul>
-          {history.length > 0 ? (
-            history.map((item) => (
-              <li key={item.id} className="p-2 border-b">
-                <span className="font-medium">{item.action}</span> - <span className="text-gray-600">{item.timestamp}</span>
-              </li>
-            ))
+      <main>
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Riwayat Admin</h2>
+
+          {loading ? (
+            <p>Memuat riwayat...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
           ) : (
-            <p className="text-gray-500">Tidak ada riwayat tersedia.</p>
+            <ul id="historyList" className="space-y-4">
+              {historyData.map((entry) => {
+                const adminName = entry.adminId ? entry.adminId.name : 'Admin Tidak Diketahui';
+                const adminEmail = entry.adminId ? entry.adminId.email : 'Email Tidak Diketahui';
+                const newsEventTitle = entry.newsEventId ? entry.newsEventId.title : 'No Title Available';
+
+                return (
+                  <li key={entry._id} className="p-4 bg-gray-100 border rounded-lg">
+                    <strong>{adminName} ({adminEmail})</strong> melakukan <b>{entry.action}</b> pada event <b>{newsEventTitle}</b>
+                    <p className="text-sm text-gray-600">
+                      pada <em>{new Date(entry.timestamp).toLocaleString()}</em>
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
           )}
-        </ul>
+        </section>
       </main>
     </div>
   );

@@ -1,129 +1,272 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-const ControlAdmin = () => {
+function App() {
   const [admins, setAdmins] = useState([]);
-  const [newAdmin, setNewAdmin] = useState({ name: "", username: "", password: "", email: "" });
-  const [editAdmin, setEditAdmin] = useState(null);
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [editAdminId, setEditAdminId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editUsername, setEditUsername] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchAdmins();
   }, []);
 
+  // Fetch the list of admins
   const fetchAdmins = async () => {
-    try {
-      const response = await fetch("/api/admins");
+    const response = await fetch('http://localhost:5000/api/admins', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
       const data = await response.json();
       setAdmins(data);
-    } catch (error) {
-      console.error("Error fetching admins:", error);
+    } else {
+      console.error('Failed to fetch admins');
     }
   };
 
-  const handleAddAdmin = async (e) => {
+  // Add new admin
+  const addAdmin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("/api/admins", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newAdmin),
-      });
-      if (response.ok) {
-        fetchAdmins();
-        setNewAdmin({ name: "", username: "", password: "", email: "" });
-      }
-    } catch (error) {
-      console.error("Error adding admin:", error);
+
+    const response = await fetch('http://localhost:5000/api/admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, username, password, email }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert('Admin added successfully');
+      fetchAdmins();  // Refresh admin list
+    } else {
+      alert('Failed to add admin');
     }
   };
 
-  const handleEditAdmin = (admin) => {
-    setEditAdmin(admin);
+  // Edit admin
+  const editAdmin = (adminId) => {
+    const admin = admins.find(admin => admin._id === adminId);
+    setEditAdminId(adminId);
+    setEditName(admin.name);
+    setEditUsername(admin.username);
+    setEditEmail(admin.email);
   };
 
-  const handleUpdateAdmin = async (e) => {
+  const updateAdmin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`/api/admins/${editAdmin.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editAdmin),
-      });
-      if (response.ok) {
-        fetchAdmins();
-        setEditAdmin(null);
-      }
-    } catch (error) {
-      console.error("Error updating admin:", error);
+
+    const response = await fetch(`http://localhost:5000/api/admin/${editAdminId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: editName, username: editUsername, email: editEmail }),
+    });
+
+    if (response.ok) {
+      alert('Admin updated successfully');
+      fetchAdmins();  // Refresh admin list
+      setEditAdminId(null);  // Clear edit state
+    } else {
+      alert('Failed to update admin');
     }
   };
 
-  const handleDeleteAdmin = async (id) => {
-    if (window.confirm("Yakin ingin menghapus admin ini?")) {
-      try {
-        await fetch(`/api/admins/${id}`, { method: "DELETE" });
-        fetchAdmins();
-      } catch (error) {
-        console.error("Error deleting admin:", error);
-      }
+  // Delete admin
+  const deleteAdmin = async (adminId) => {
+    const response = await fetch(`http://localhost:5000/api/admin/${adminId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      alert('Admin deleted successfully');
+      fetchAdmins();  // Refresh admin list
+    } else {
+      alert('Failed to delete admin');
     }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Control Admin</h1>
-        <nav>
-          <a href="superadmin" className="mr-4 text-blue-500">Superadmin Dashboard</a>
-          <button className="text-red-500" onClick={() => console.log("Logout")}>Logout</button>
-        </nav>
+    <div className="App bg-blue-50 min-h-screen">
+      <header className="bg-blue-900 text-white p-4 shadow-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-3xl font-semibold tracking-wide">Control Admin</h1>
+          <nav>
+            <a href="/superadmindashboard" className="text-lg hover:underline">Superadmin Dashboard</a>
+            <button 
+              id="logout" 
+              onClick={logout} 
+              className="ml-4 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-all"
+            >
+              Logout
+            </button>
+          </nav>
+        </div>
       </header>
-
-      {/* Daftar Admin */}
-      <section>
-        <h2 className="text-xl font-semibold mb-2">Daftar Admin</h2>
-        <ul className="border p-4 rounded-lg bg-gray-100">
-          {admins.length > 0 ? (
-            admins.map((admin) => (
-              <li key={admin.id} className="flex justify-between items-center p-2 border-b">
-                <span>{admin.name} ({admin.username})</span>
+  
+      <main className="container mx-auto p-6">
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-4 text-blue-900">Daftar Admin</h2>
+          <ul className="space-y-4">
+            {admins.map(admin => (
+              <li key={admin._id} className="flex justify-between items-center p-4 bg-white shadow-md rounded-md transform transition-transform hover:scale-105">
+                <span className="text-lg text-gray-800">{`Name: ${admin.name}, Username: ${admin.username}, Email: ${admin.email}`}</span>
                 <div>
-                  <button className="text-blue-500 mr-2" onClick={() => handleEditAdmin(admin)}>Edit</button>
-                  <button className="text-red-500" onClick={() => handleDeleteAdmin(admin.id)}>Hapus</button>
+                  <button 
+                    onClick={() => editAdmin(admin._id)} 
+                    className="bg-yellow-500 text-black px-4 py-2 rounded-md hover:bg-yellow-600 mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    onClick={() => deleteAdmin(admin._id)} 
+                    className="bg-red-600 text-black px-4 py-2 rounded-md hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
                 </div>
               </li>
-            ))
-          ) : (
-            <p className="text-gray-500">Belum ada admin.</p>
-          )}
-        </ul>
-      </section>
-
-      {/* Tambah Admin */}
-      <section className="mt-6">
-        <h2 className="text-xl font-semibold mb-2">Tambah Admin Baru</h2>
-        <form onSubmit={handleAddAdmin} className="space-y-3">
-          <input type="text" placeholder="Nama Admin" className="border p-2 w-full" value={newAdmin.name} onChange={(e) => setNewAdmin({ ...newAdmin, name: e.target.value })} required />
-          <input type="text" placeholder="Username" className="border p-2 w-full" value={newAdmin.username} onChange={(e) => setNewAdmin({ ...newAdmin, username: e.target.value })} required />
-          <input type="password" placeholder="Password" className="border p-2 w-full" value={newAdmin.password} onChange={(e) => setNewAdmin({ ...newAdmin, password: e.target.value })} required />
-          <input type="email" placeholder="Email" className="border p-2 w-full" value={newAdmin.email} onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })} required />
-          <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">Tambah Admin</button>
-        </form>
-      </section>
-
-      {/* Edit Admin */}
-      {editAdmin && (
-        <section className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Edit Admin</h2>
-          <form onSubmit={handleUpdateAdmin} className="space-y-3">
-            <input type="text" className="border p-2 w-full" value={editAdmin.name} onChange={(e) => setEditAdmin({ ...editAdmin, name: e.target.value })} required />
-            <input type="text" className="border p-2 w-full" value={editAdmin.username} onChange={(e) => setEditAdmin({ ...editAdmin, username: e.target.value })} required />
-            <input type="email" className="border p-2 w-full" value={editAdmin.email} onChange={(e) => setEditAdmin({ ...editAdmin, email: e.target.value })} required />
-            <button type="submit" className="bg-green-500 text-white p-2 rounded w-full">Update Admin</button>
+            ))}
+          </ul>
+        </section>
+  
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-4 text-blue-900">Tambah Admin Baru</h2>
+          <form onSubmit={addAdmin} className="bg-white p-6 shadow-md rounded-md space-y-4">
+            <div>
+              <label htmlFor="name" className="block font-medium text-gray-700">Nama Admin:</label>
+              <input 
+                type="text" 
+                id="name" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                required 
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+  
+            <div>
+              <label htmlFor="username" className="block font-medium text-gray-700">Username:</label>
+              <input 
+                type="text" 
+                id="username" 
+                value={username} 
+                onChange={(e) => setUsername(e.target.value)} 
+                required 
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+  
+            <div>
+              <label htmlFor="password" className="block font-medium text-gray-700">Password:</label>
+              <input 
+                type="password" 
+                id="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+  
+            <div>
+              <label htmlFor="email" className="block font-medium text-gray-700">Email:</label>
+              <input 
+                type="email" 
+                id="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+  
+            <button 
+              type="submit" 
+              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all"
+            >
+              Tambah Admin
+            </button>
           </form>
         </section>
-      )}
+  
+        {editAdminId && (
+          <section>
+            <h2 className="text-2xl font-semibold mb-4 text-blue-900">Edit Admin</h2>
+            <form onSubmit={updateAdmin} className="bg-white p-6 shadow-md rounded-md space-y-4">
+              <div>
+                <label htmlFor="editName" className="block font-medium text-gray-700">Nama Admin:</label>
+                <input 
+                  type="text" 
+                  id="editName" 
+                  value={editName} 
+                  onChange={(e) => setEditName(e.target.value)} 
+                  required 
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+  
+              <div>
+                <label htmlFor="editUsername" className="block font-medium text-gray-700">Username:</label>
+                <input 
+                  type="text" 
+                  id="editUsername" 
+                  value={editUsername} 
+                  onChange={(e) => setEditUsername(e.target.value)} 
+                  required 
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+  
+              <div>
+                <label htmlFor="editEmail" className="block font-medium text-gray-700">Email:</label>
+                <input 
+                  type="email" 
+                  id="editEmail" 
+                  value={editEmail} 
+                  onChange={(e) => setEditEmail(e.target.value)} 
+                  required 
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+  
+              <button 
+                type="submit" 
+                className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-all"
+              >
+                Update Admin
+              </button>
+            </form>
+          </section>
+        )}
+      </main>
     </div>
   );
-};
+  
+}  
 
-export default ControlAdmin;
+export default App;
