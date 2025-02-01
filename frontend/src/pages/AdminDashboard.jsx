@@ -157,6 +157,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <p className="mt-2">{item.description}</p>
+              <p className="mt-2 text-gray-600">Category: {item.category}</p>
               {item.eventDate && <p className="mt-2 text-gray-600">Date: {new Date(item.eventDate).toLocaleDateString()}</p>}
               {item.image && <img src={item.image} alt="Event" className="mt-4 w-32 h-32 object-cover rounded-lg" />}
             </li>

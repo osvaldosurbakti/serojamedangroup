@@ -51,7 +51,7 @@ const NewsEvents = () => {
             newsEvents.map((newsEvent) => (
               <li key={newsEvent.id} className="p-6 bg-gray-50 border-2 border-gray-200 rounded-lg shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105">
                 <strong className="text-xl font-bold text-gray-900">{newsEvent.title}</strong>
-                <p className="text-sm text-gray-600 mt-2">Kategori: {newsEvent.category}</p>
+                <p className="text-sm text-gray-600 mt-2">{newsEvent.category}</p>
                 <p className="mt-2 text-gray-700">{newsEvent.description}</p>
                 {newsEvent.eventDate && (
                   <p className="mt-2 text-gray-600">Tanggal: {new Date(newsEvent.eventDate).toLocaleDateString()}</p>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
+import AdminNavbar from './components/AdminNavbar';  // Import AdminNavbar
 import SuperadminNavbar from './components/SuperadminNavbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -48,7 +49,7 @@ function AppContent() {
 
   return (
     <>
-      {isAuthenticated && role === 'superadmin' ? <SuperadminNavbar /> : <Navbar />}
+      {isAuthenticated && role === 'superadmin' ? <SuperadminNavbar /> : (isAuthenticated && role === 'admin' ? <AdminNavbar /> : <Navbar />)}
       <Header />
       <main className="flex-grow p-4 bg-gray-100">
         {loading && <div>Loading...</div>}
