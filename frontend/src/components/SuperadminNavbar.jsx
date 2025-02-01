@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { FiMenu, FiX } from 'react-icons/fi'; // Import ikon
+import { FiMenu, FiX } from 'react-icons/fi'; // Import icons
 
 const NavItem = ({ to, label }) => (
   <li>
@@ -32,51 +32,73 @@ const SuperadminNavbar = () => {
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'About Us', path: '/about-us' },
+    { label: 'Business', path: '/business' },
     { label: 'Contact Us', path: '/contact-us' },
     { label: 'News Events', path: '/newsevents' }
   ];
 
   const superAdminItems = [
     { label: 'Dashboard Superadmin', path: '/superadmindashboard' },
-    { label: 'Manage News & Events', path: '/admindashboard' },
+    { label: 'Manage News-Event', path: '/admindashboard' },
     { label: 'Manage Admin', path: '/controladmin' },
     { label: 'History', path: '/history' }
   ];
 
   return (
     <nav className="bg-gray-900 text-white fixed top-0 left-0 w-full z-50 shadow-lg">
-    <div className="container mx-auto flex justify-between items-center px-4 lg:px-8 py-2 h-16">
+      <div className="container mx-auto flex justify-between items-center px-4 lg:px-8 py-2 h-16">
   
         {/* Logo */}
         <div className="text-2xl font-bold text-yellow-400 cursor-pointer hover:text-yellow-500 transition-colors duration-300">
-      <Link to="/">Superadmin Panel</Link>
-    </div>
+          <Link to="/superadmindashboard">Superadmin Panel</Link>
+        </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-6 text-sm">
-      <ul className="flex gap-6">
-        {navItems.map((item) => (
-          <NavItem key={item.path} to={item.path} label={item.label} />
-        ))}
-        {isAuthenticated && role === 'superadmin' &&
-          superAdminItems.map((item) => (
-            <NavItem key={item.path} to={item.path} label={item.label} />
-          ))}
-      </ul>
-
-           {/* Logout Button */}
-      {isAuthenticated ? (
-        <button onClick={handleLogout} className="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600 transition duration-300 text-xs">
-          Logout
-        </button>
-      ) : (
-        <Link to="/login">
-          <button className="px-4 py-2 bg-yellow-500 rounded-md hover:bg-yellow-600 transition duration-300 text-xs">
-            Login
-          </button>
+ {/* Desktop Navigation */}
+ <div className="hidden lg:flex items-center gap-6 text-sm">
+  <ul className="flex gap-6">
+    {navItems.map((item) => (
+      <li key={item.path} className="flex items-center justify-center">
+        <Link to={item.path} className="px-6 py-2 hover:bg-yellow-400 rounded-md transition duration-300">
+          {item.label.includes(' ') ? (
+            item.label.split(' ').map((word, index) => (
+              <span key={index} className="block text-center">{word}</span>
+            ))
+          ) : (
+            item.label
+          )}
         </Link>
-      )}
-              </div>
+      </li>
+    ))}
+    {isAuthenticated && role === 'superadmin' &&
+      superAdminItems.map((item) => (
+        <li key={item.path} className="flex items-center justify-center">
+          <Link to={item.path} className="px-6 py-2 hover:bg-yellow-400 rounded-md transition duration-300">
+            {item.label.includes(' ') ? (
+              item.label.split(' ').map((word, index) => (
+                <span key={index} className="block text-center">{word}</span>
+              ))
+            ) : (
+              item.label
+            )}
+          </Link>
+        </li>
+      ))}
+  </ul>
+
+  {/* Logout Button */}
+  {isAuthenticated ? (
+    <button onClick={handleLogout} className="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600 transition duration-300 text-xs">
+      Logout
+    </button>
+  ) : (
+    <Link to="/login">
+      <button className="px-4 py-2 bg-yellow-500 rounded-md hover:bg-yellow-600 transition duration-300 text-xs">
+        Login
+      </button>
+    </Link>
+  )}
+</div>
 
         {/* Mobile Navigation */}
         <button className="lg:hidden text-3xl text-yellow-400" onClick={() => setIsOpen(!isOpen)}>

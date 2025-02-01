@@ -63,6 +63,10 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           {isAuthenticated && role === 'superadmin' && (
             <>
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/business" element={<Business />} />
+              <Route path="/newsevents" element={<NewsEvents />} />
+              <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/superadmindashboard" element={<SuperAdminDashboard />} />
               <Route path="/admindashboard" element={<AdminDashboard />} />  
               <Route path="/controladmin" element={<ControlAdmin />} />
@@ -70,7 +74,14 @@ function AppContent() {
             </>
           )}
           {isAuthenticated && role === 'admin' && (
+            <>          
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/business" element={<Business />} />
+            <Route path="/newsevents" element={<NewsEvents />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/newsevents" element={<NewsEvents />} />
             <Route path="/admindashboard" element={<AdminDashboard />} />
+            </>
           )}
           <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>

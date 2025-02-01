@@ -32,6 +32,7 @@ const AdminNavbar = () => {
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'About Us', path: '/about-us' },
+    { label: 'Business', path: '/business' },
     { label: 'Contact Us', path: '/contact-us' },
     { label: 'News Events', path: '/newsevents' }
   ];
@@ -46,7 +47,7 @@ const AdminNavbar = () => {
   
         {/* Logo */}
         <div className="text-2xl font-bold text-yellow-400 cursor-pointer hover:text-yellow-500 transition-colors duration-300">
-          <Link to="/admindashboad">Admin Panel</Link>
+          <Link to="/admindashboard">Admin Panel</Link>
         </div>
 
         {/* Desktop Navigation */}

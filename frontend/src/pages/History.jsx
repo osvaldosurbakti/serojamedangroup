@@ -44,35 +44,52 @@ const AdminHistory = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-    
-      <main>
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Riwayat Admin</h2>
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 py-10 px-6">
 
-          {loading ? (
-            <p>Memuat riwayat...</p>
-          ) : error ? (
-            <p className="text-red-500">{error}</p>
-          ) : (
-            <ul id="historyList" className="space-y-4">
+      <main className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-xl">
+        <header className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800">Riwayat Admin</h2>
+          <p className="text-lg text-gray-600 mt-2">Pantau riwayat aksi admin yang dilakukan pada sistem.</p>
+        </header>
+
+        {/* Error or Loading State */}
+        {loading ? (
+          <div className="text-center text-lg text-gray-600">Memuat riwayat...</div>
+        ) : error ? (
+          <div className="text-center text-lg text-red-500">{error}</div>
+        ) : (
+          <section>
+            <ul className="space-y-6">
               {historyData.map((entry) => {
                 const adminName = entry.adminId ? entry.adminId.name : 'Admin Tidak Diketahui';
                 const adminEmail = entry.adminId ? entry.adminId.email : 'Email Tidak Diketahui';
                 const newsEventTitle = entry.newsEventId ? entry.newsEventId.title : 'No Title Available';
 
                 return (
-                  <li key={entry._id} className="p-4 bg-gray-100 border rounded-lg">
-                    <strong>{adminName} ({adminEmail})</strong> melakukan <b>{entry.action}</b> pada event <b>{newsEventTitle}</b>
-                    <p className="text-sm text-gray-600">
-                      pada <em>{new Date(entry.timestamp).toLocaleString()}</em>
+                  <li
+                    key={entry._id}
+                    className="p-6 bg-gray-100 border-2 border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        <strong className="text-xl font-semibold text-gray-800">{adminName}</strong>
+                        <p className="text-sm text-gray-600">{adminEmail}</p>
+                      </div>
+                      <span className="text-sm text-gray-500">{new Date(entry.timestamp).toLocaleString()}</span>
+                    </div>
+
+                    <p className="text-lg text-gray-700 mb-2">
+                      <span className="font-semibold text-gray-800">Aksi:</span> {entry.action}
+                    </p>
+                    <p className="text-lg text-gray-700">
+                      <span className="font-semibold text-gray-800">Event:</span> {newsEventTitle}
                     </p>
                   </li>
                 );
               })}
             </ul>
-          )}
-        </section>
+          </section>
+        )}
       </main>
     </div>
   );

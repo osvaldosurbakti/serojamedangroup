@@ -44,13 +44,13 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Login</h1>
-      </header>
+    <div className="min-h-screen bg-gradient-to-r from-indigo-600 to-blue-500 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full">
+        <header className="mb-6 text-center">
+          <h1 className="text-4xl font-bold text-gray-800">Login</h1>
+        </header>
 
-      <main className="bg-white p-8 rounded-lg shadow-md w-96">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="username" className="block font-medium text-gray-700">Username:</label>
             <input
@@ -59,7 +59,7 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
@@ -71,17 +71,20 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          >
             Login
           </button>
         </form>
 
-        {errorMessage && <p className="text-red-600 mt-4">{errorMessage}</p>}
-      </main>
+        {errorMessage && <p className="text-red-600 mt-4 text-center">{errorMessage}</p>}
+      </div>
     </div>
   );
 };

@@ -6,9 +6,9 @@ const Dashboard = () => {
   const [editingId, setEditingId] = useState(null);
   const [filterCategory, setFilterCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
-  const username = localStorage.getItem("username"); // assuming username is stored
 
   useEffect(() => {
     if (!token) {
@@ -16,19 +16,20 @@ const Dashboard = () => {
     } else {
       fetchNewsEvents();
     }
-  }, []);
+  }, [token]); // added token dependency
 
   const fetchNewsEvents = async () => {
+    setLoading(true); // set loading to true before fetching data
     try {
       const response = await fetch("http://localhost:5000/api/news-events", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       setNewsEvents(data);
-      setLoading(false); // stop loading
     } catch (error) {
       console.error("Error fetching news events:", error);
-      setLoading(false); // stop loading
+    } finally {
+      setLoading(false); // stop loading after fetching
     }
   };
 
@@ -91,9 +92,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800 p-8">
       <div className="mb-6 text-lg text-gray-600">
-      <p>Welcome, <strong className="text-indigo-700">{username}</strong></p>
         <p>Logged in as: <strong className="text-indigo-700">{role}</strong></p>
       </div>
+      
       {/* Form Input */}
       <div className="mt-8 bg-white p-6 rounded-lg shadow-xl">
         <h2 className="text-3xl font-semibold mb-6 text-indigo-700">{editingId ? "Edit" : "Add"} News & Event</h2>
@@ -149,7 +150,7 @@ const Dashboard = () => {
           </button>
         </form>
       </div>
-  
+
       {/* Filter and Search */}
       <div className="mt-8 flex justify-between items-center">
         <div className="flex space-x-4">
@@ -171,38 +172,42 @@ const Dashboard = () => {
           />
         </div>
       </div>
-  
+
       {/* News & Events List */}
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-4 text-indigo-700">News & Events</h2>
-        <ul className="space-y-6">
-          {filteredNewsEvents.map((item) => (
-            <li key={item._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
-              <div className="flex justify-between items-center">
-                <strong className="text-xl text-indigo-600">{item.title}</strong>
-                <div>
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition duration-300 mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300"
-                  >
-                    Delete
-                  </button>
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <ul className="space-y-6">
+            {filteredNewsEvents.map((item) => (
+              <li key={item._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out">
+                <div className="flex justify-between items-center">
+                  <strong className="text-xl text-indigo-600">{item.title}</strong>
+                  <div>
+                    <button
+                      onClick={() => handleEdit(item)}
+                      className="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition duration-300 mr-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition duration-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <p className="mt-2">{item.description}</p>
-              <p className="mt-2 text-gray-600">Category: {item.category}</p>
-              {item.eventDate && <p className="mt-2 text-gray-600">Date: {new Date(item.eventDate).toLocaleDateString()}</p>}
-              {item.image && <img src={item.image} alt="Event" className="mt-4 w-32 h-32 object-cover rounded-lg" />}
-              <p className="mt-2 text-sm text-gray-500">{item.status}</p> {/* Added Status */}
-            </li>
-          ))}
-        </ul>
+                <p className="mt-2">{item.description}</p>
+                <p className="mt-2 text-gray-600">Category: {item.category}</p>
+                {item.eventDate && <p className="mt-2 text-gray-600">Date: {new Date(item.eventDate).toLocaleDateString()}</p>}
+                {item.image && <img src={item.image} alt="Event" className="mt-4 w-32 h-32 object-cover rounded-lg" />}
+                <p className="mt-2 text-sm text-gray-500">{item.status}</p> {/* Added Status */}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
