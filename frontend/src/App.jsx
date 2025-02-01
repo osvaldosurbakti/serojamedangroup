@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
-import AdminNavbar from './components/AdminNavbar';  // Import AdminNavbar
+import AdminNavbar from './components/AdminNavbar'; 
 import SuperadminNavbar from './components/SuperadminNavbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
