@@ -1,10 +1,11 @@
 import React from 'react';
+import SuperadminNavbar from '../components/SuperadminNavbar';
+
 
 const SuperadminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <SuperadminNavbar /> {/* Menggunakan Navbar disini */}
-      
+       
       <main className="flex-grow bg-white py-8 px-4">
         <section className="container mx-auto space-y-8">
           <h2 className="text-3xl font-semibold text-gray-800">Selamat Datang di Dashboard Superadmin</h2>

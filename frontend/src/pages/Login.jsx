@@ -47,9 +47,6 @@ const Login = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Login</h1>
-        <nav>
-          <a href="/" className="text-blue-600 hover:underline">Home</a>
-        </nav>
       </header>
 
       <main className="bg-white p-8 rounded-lg shadow-md w-96">

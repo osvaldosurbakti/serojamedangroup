@@ -45,19 +45,7 @@ const AdminHistory = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <header className="text-center mb-6">
-        <h1 className="text-3xl font-bold">Riwayat Aksi Admin</h1>
-        <nav className="mt-4">
-          <a href="/superadmindashboard" className="text-blue-500 mx-4 hover:underline">Kembali ke Dashboard</a>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300"
-          >
-            Logout
-          </button>
-        </nav>
-      </header>
-
+    
       <main>
         <section>
           <h2 className="text-2xl font-semibold mb-4">Riwayat Admin</h2>

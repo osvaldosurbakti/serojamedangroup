@@ -78,19 +78,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 p-8">
-      <header className="bg-indigo-600 text-white p-4 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold">{role === "superadmin" ? "Superadmin Dashboard" : "Admin Dashboard"}</h1>
-        <nav className="mt-4">
-          <a href="/" className="text-indigo-200 hover:text-white mr-4">Home</a>
-          <a href="/admindashboard" className="text-indigo-200 hover:text-white">Dashboard</a>
-          <button
-            onClick={() => { localStorage.clear(); window.location.href = "/login"; }}
-            className="ml-6 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            Logout
-          </button>
-        </nav>
-      </header>
 
       <div className="mt-8 bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-6">{editingId ? "Edit" : "Add"} News & Event</h2>

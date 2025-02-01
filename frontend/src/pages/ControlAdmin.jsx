@@ -112,21 +112,6 @@ function App() {
 
   return (
     <div className="App bg-blue-50 min-h-screen">
-      <header className="bg-blue-900 text-white p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-semibold tracking-wide">Control Admin</h1>
-          <nav>
-            <a href="/superadmindashboard" className="text-lg hover:underline">Superadmin Dashboard</a>
-            <button 
-              id="logout" 
-              onClick={logout} 
-              className="ml-4 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-all"
-            >
-              Logout
-            </button>
-          </nav>
-        </div>
-      </header>
   
       <main className="container mx-auto p-6">
         <section className="mb-6">
