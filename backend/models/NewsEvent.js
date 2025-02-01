@@ -6,7 +6,7 @@ const newsEventSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ['News', 'Event'], // Only allow 'news' or 'event'
+      enum: ['news', 'event'], // Only allow 'news' or 'event'
     },
     eventDate: { type: Date, required: true }, // Make eventDate mandatory
     image: { type: String },
